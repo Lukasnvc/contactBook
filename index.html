@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script defer src="/script.js"></script>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="top">
+    <div class="navigation">
+<button id="newContact" class="btn">Create new contact</button>
+<button id="clearAll" class="btn">Clear all Contacts</button>
+<button id="clearSelected" class="btn">Clear selected contacts</button>
+<div class="search">
+<button id="search" type="submit" class="btn">Search contacts</button>
+<input type="text" id="searchField" placeholder="Type name">
+</div>
+<button id="addRemove" class="btn">Add/Remove selected to favorites</button>
+</div>
+<form id="form">
+  <div class="close" id="close">x</div>
+  <label for="name">Name</label>
+  <input name="name"  id="name" type="text">
+  <label for="phone">Phone</label>
+  <input type="number" name="phone" id="phone">
+  <label for="email">Email</label>
+  <input type="email" name="email" id="mail">
+  <label for="address">Home address</label>
+  <input type="text" name="address" id="address">
+  <button id='submit' type="submit">Add to book</button>
+</form>
+
+</div>
+  <div class="contactCards">
+      <div id="contactList">
+        <h2>Your contact list</h2>
+      </div>
+      <div id="searchResults">
+        <h2>Search results</h2>
+        <button class="clearSearch" id="clearSearch">Clear search history</button>
+      </div>
+      <div id="favoriteList">
+        <h2>Your favorite contacts list</h2>
+    </div>
+  </div>
+
+  
+</body>
+</html>
