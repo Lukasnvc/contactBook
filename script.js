@@ -49,9 +49,7 @@ close.addEventListener('click', ()=> {
   formDisplay.style.display= 'none';
 })
 
-clearSelected.addEventListener('click', ()=> {
-  
-})
+
 
 
 
@@ -99,6 +97,11 @@ let arr= JSON.parse(localStorage.getItem('contacts')) || [];
     efield.textContent=`Email address: ${contact.email}`;
     afield.textContent=`Home address: ${contact.address}`;
     contactList.appendChild(card);
+
+    if(contact.selected){
+      card.style.backgroundColor= 'purple';
+        select.textContent= 'Unselect';
+    }
 
     deleteOne.addEventListener('click', ()=> {
     show.splice(indexNumber,1);
@@ -173,6 +176,11 @@ let arr= JSON.parse(localStorage.getItem('contacts')) || [];
     afield.textContent=`Home address: ${contact.address}`;
     favoriteList.appendChild(card);
 
+    if(contact.selected){
+      card.style.backgroundColor= 'purple';
+        select.textContent= 'Unselect';
+    }
+
     deleteOne.addEventListener('click', ()=> {
     console.log('click');
     show.splice(indexNumber,1);
@@ -205,7 +213,44 @@ let arr= JSON.parse(localStorage.getItem('contacts')) || [];
     })
   });
 
+  clearSelected.addEventListener('click', ()=> {
+    show.forEach((contact, indexNumber) => {
+      if(contact.selected){
+        console.log(contact.selected);
+        show.splice(indexNumber,1);
+      }
+    })
+    showFav.forEach((contact, indexNumber) => {
+      if(contact.selected){
+        console.log(contact.selected);
+        showFav.splice(indexNumber,1);
+      } 
+    })
+    localStorage.setItem('favorites', JSON.stringify(showFav));
+    localStorage.setItem('contacts', JSON.stringify(show));
+        location.reload();
+    })
 
+    addRemove.addEventListener('click', ()=> {
+      show.forEach((contact, indexNumber) => {
+        if(contact.selected) {
+          contact.selected = false;
+          localStorage.setItem('contacts', JSON.stringify(show));
+          fav.push(show[indexNumber]);
+          localStorage.setItem('favorites', JSON.stringify(fav));
+          location.reload();
+        } 
+      })
+      showFav.forEach((favorit, indexNumber) => {
+        if(favorit.selected) {
+          favorit.selected= false;
+          showFav.splice(indexNumber,1);
+          localStorage.setItem('favorites', JSON.stringify(showFav));
+          location.reload();
+        }
+      })
+    })
+   
 
 // searchField.addEventListener('keyup', ()=> {
   
@@ -310,9 +355,6 @@ searchField.addEventListener('input', (e) => {
   }
   
 })
-
-
-
 
 form.addEventListener('submit', (event)=> {
 event.preventDefault();
