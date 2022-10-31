@@ -23,6 +23,11 @@ const searchResults = document.querySelector('#searchResults');
 formDisplay.style.display= 'none';
 //form
 
+
+function c(string){
+  console.log(string);
+}
+
 search.addEventListener('click', ()=> {
   if(searchField.style.display=== 'none'){
   searchField.style.display= 'block';
@@ -49,15 +54,55 @@ close.addEventListener('click', ()=> {
   formDisplay.style.display= 'none';
 })
 
+let founded=[];
 
+searchField.addEventListener('input', (e) => {
+  e.preventDefault();
+  let b = searchField.value;
+  if (b) {
+    let target =show.filter((item) => {
+      return item.name.includes(b)
+    })
+    let [contact] = target;
+    
+    c('founded');
 
+    if (!founded.includes(contact)){
+      founded.push(contact);
+    const card = document.createElement('div');
+    const nfield = document.createElement('p');
+    const pfield = document.createElement('p');
+    const efield = document.createElement('p');
+    const afield = document.createElement('p');
+  
+    card.style.backgroundColor= 'beige';
+    card.style.width= '300px';
+    card.style.padding= '10px';
+    card.style.margin= '20px';
 
+    card.appendChild(nfield);
+    card.appendChild(pfield);
+    card.appendChild(efield);
+    card.appendChild(afield);
+  
+    nfield.textContent=`Name: ${contact.name}`;
+    pfield.textContent=`Phone nr: ${contact.phone}`;
+    efield.textContent=`Email address: ${contact.email}`;
+    afield.textContent=`Home address: ${contact.address}`;
+   
+    contactList.replaceChildren(card);
+    }
+
+  } else {
+    location.reload();
+  }
+})
+  
 
 let arr= JSON.parse(localStorage.getItem('contacts')) || [];
   const contact = localStorage.getItem('contacts');
   let show =JSON.parse(contact) || [];
-  
-  
+
   show.forEach((contact, indexNumber) => {
     const card = document.createElement('div');
     card.setAttribute('id', `${contact.name}`)
@@ -80,7 +125,7 @@ let arr= JSON.parse(localStorage.getItem('contacts')) || [];
     select.style.color= 'green';
     select.textContent= 'Select';
     card.style.backgroundColor= 'beige';
-    card.style.width= '250px';
+    card.style.width= '300px';
     card.style.padding= '10px';
     card.style.margin= '20px';
 
@@ -111,7 +156,6 @@ let arr= JSON.parse(localStorage.getItem('contacts')) || [];
 
     favorite.addEventListener('click', ()=> {
       contact.favorite=true;
-      console.log(contact.favorite)
       let fav= JSON.parse(localStorage.getItem('favorites')) || [];
       fav.push(show[indexNumber]);
       localStorage.setItem('favorites', JSON.stringify(fav));
@@ -140,7 +184,6 @@ let arr= JSON.parse(localStorage.getItem('contacts')) || [];
 
   showFav.forEach((contact, indexNumber) => {
     const card = document.createElement('div');
-    card.setAttribute('id', `${contact.name}`)
     const nfield = document.createElement('p');
     const pfield = document.createElement('p');
     const efield = document.createElement('p');
@@ -158,7 +201,7 @@ let arr= JSON.parse(localStorage.getItem('contacts')) || [];
     select.style.color= 'green';
     select.textContent= 'Select';
     card.style.backgroundColor= 'beige';
-    card.style.width= '250px';
+    card.style.width= '300px';
     card.style.padding= '10px';
     card.style.margin= '20px';
 
@@ -234,6 +277,7 @@ let arr= JSON.parse(localStorage.getItem('contacts')) || [];
     addRemove.addEventListener('click', ()=> {
       show.forEach((contact, indexNumber) => {
         if(contact.selected) {
+          contact.favorite = true;
           contact.selected = false;
           localStorage.setItem('contacts', JSON.stringify(show));
           fav.push(show[indexNumber]);
@@ -252,17 +296,16 @@ let arr= JSON.parse(localStorage.getItem('contacts')) || [];
     })
    
 
-// searchField.addEventListener('keyup', ()=> {
-  
+// searchField.addEventListener('keyup', (e)=> {
+//   e.preventDefault()
 //   console.log(searchField.value)
-
-//   show.forEach((contact) => {
+//   show.forEach((contact, indexNumber) => {
 //     if(contact.name===searchField.value){
 //       console.log('issove');
 //       let rastas = show.filter(contact => contact.name===searchField.value);
 //       console.log(rastas)
 //       const card = document.createElement('div');
-//     card.setAttribute('id', `${contact.name}`)
+//     card.setAttribute('id', `found`)
 //     const nfield = document.createElement('p');
 //     const pfield = document.createElement('p');
 //     const efield = document.createElement('p');
@@ -288,7 +331,9 @@ let arr= JSON.parse(localStorage.getItem('contacts')) || [];
 //     pfield.textContent=`Phone nr: ${contact.phone}`;
 //     efield.textContent=`Email address: ${contact.email}`;
 //     afield.textContent=`Home address: ${contact.address}`;
-//     searchResults.appendChild(card);
+
+//     let list = document.querySelector(`#listOfSearched`);
+//     list.appendChild(card);
 
 //     deleteOne.addEventListener('click', ()=> {
 //       console.log('click');
@@ -300,61 +345,12 @@ let arr= JSON.parse(localStorage.getItem('contacts')) || [];
 //       })
 
 //     } else {
-//       console.log('neissove')
+//       console.log('neissove');
 //     }
-    
 //       })
-//       searchField.value='';
+//       // searchField.value='';
 // })
 
-
-searchField.addEventListener('input', (e) => {
-  e.preventDefault();
-  let b = searchField.value;
-  if (b) {
-    let target =show.filter((item) => {
-      console.log(item.name);
-      console.log(item.name.includes(b))
-      return item.name.includes(b)
-    })
-    const find = document.createElement('div');
-    let [person] = target
-    console.log(person)
-    
-
-    const card = document.createElement('div');
-    const nfield = document.createElement('p');
-    const pfield = document.createElement('p');
-    const efield = document.createElement('p');
-    const afield = document.createElement('p');
-    const deleteOne = document.createElement('button');
-    deleteOne.textContent='Delete';
-    deleteOne.style.backgroundColor= 'red';
-    deleteOne.style.marginRight= '5px'
-    card.style.backgroundColor= 'beige';
-    card.style.width= '250px';
-    card.style.padding= '10px';
-    card.style.margin= '20px';
-
-    card.appendChild(nfield);
-    card.appendChild(pfield);
-    card.appendChild(efield);
-    card.appendChild(afield);
-    card.appendChild(deleteOne);
-  
-    nfield.textContent=`Name: ${person.name}`;
-    pfield.textContent=`Phone nr: ${person.phone}`;
-    efield.textContent=`Email address: ${person.email}`;
-    afield.textContent=`Home address: ${person.address}`;
-    searchResults.appendChild(card);
-  } else {
-    nfield.textContent=``;
-    pfield.textContent=``;
-    efield.textContent=``;
-    afield.textContent=``;
-  }
-  
-})
 
 form.addEventListener('submit', (event)=> {
 event.preventDefault();
@@ -379,3 +375,4 @@ if (fname.value && email.value && address.value){
   location.reload();
 }
 })
+
