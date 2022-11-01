@@ -79,4 +79,7 @@ body .contactCards .clearSearch {
 body .contactCards h2 {
   display: block;
   text-align: center;
+}
+body .contactCards .hide {
+  display: none;
 }/*# sourceMappingURL=styles.css.map */

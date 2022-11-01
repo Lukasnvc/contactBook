@@ -24,94 +24,15 @@ formDisplay.style.display= 'none';
 //form
 
 
-function c(string){
-  console.log(string);
-}
-
-search.addEventListener('click', ()=> {
-  if(searchField.style.display=== 'none'){
-  searchField.style.display= 'block';
-} else {
-  searchField.style.display= 'none';
-}
-})
-
-clearAll.addEventListener('click', ()=> {
-localStorage.clear()
-console.log('clicked')
-location.reload();
-})
-
-newContact.addEventListener('click', ()=> {
-  if (formDisplay.style.display=== 'none'){
-  formDisplay.style.display= 'flex';
-} else {
-  formDisplay.style.display= 'none';
-}
-})
-
-close.addEventListener('click', ()=> {
-  formDisplay.style.display= 'none';
-})
-
-let founded=[];
-
-searchField.addEventListener('input', (e) => {
-  e.preventDefault();
-  let b = searchField.value;
-  if (b) {
-    let target =show.filter((item) => {
-      return item.name.includes(b)
-    })
-    let [contact] = target;
-    
-    c('founded');
-
-    if (!founded.includes(contact)){
-      founded.push(contact);
-    const card = document.createElement('div');
-    const nfield = document.createElement('p');
-    const pfield = document.createElement('p');
-    const efield = document.createElement('p');
-    const afield = document.createElement('p');
-  
-    card.style.backgroundColor= 'beige';
-    card.style.width= '300px';
-    card.style.padding= '10px';
-    card.style.margin= '20px';
-
-    card.appendChild(nfield);
-    card.appendChild(pfield);
-    card.appendChild(efield);
-    card.appendChild(afield);
-  
-    nfield.textContent=`Name: ${contact.name}`;
-    pfield.textContent=`Phone nr: ${contact.phone}`;
-    efield.textContent=`Email address: ${contact.email}`;
-    afield.textContent=`Home address: ${contact.address}`;
-   
-    contactList.replaceChildren(card);
-    }
-
-  } else {
-    location.reload();
-  }
-})
-  
-
-let arr= JSON.parse(localStorage.getItem('contacts')) || [];
-  const contact = localStorage.getItem('contacts');
-  let show =JSON.parse(contact) || [];
-
-  show.forEach((contact, indexNumber) => {
-    const card = document.createElement('div');
-    card.setAttribute('id', `${contact.name}`)
+function isorine (contact, vieta) {
+  console.log(contact.name)
+  const card = document.createElement('div');
     const nfield = document.createElement('p');
     const pfield = document.createElement('p');
     const efield = document.createElement('p');
     const afield = document.createElement('p');
     const deleteOne = document.createElement('button');
-    deleteOne.setAttribute('class', `delete${indexNumber}`);
+    deleteOne.setAttribute('class', `delete${contact.id}`);
     deleteOne.textContent='delete';
     deleteOne.style.backgroundColor= 'red';
     deleteOne.style.marginRight= '5px';
@@ -141,33 +62,57 @@ let arr= JSON.parse(localStorage.getItem('contacts')) || [];
     pfield.textContent=`Phone nr: ${contact.phone}`;
     efield.textContent=`Email address: ${contact.email}`;
     afield.textContent=`Home address: ${contact.address}`;
-    contactList.appendChild(card);
+    vieta.appendChild(card);
+
 
     if(contact.selected){
       card.style.backgroundColor= 'purple';
         select.textContent= 'Unselect';
     }
 
-    deleteOne.addEventListener('click', ()=> {
-    show.splice(indexNumber,1);
-    localStorage.setItem('contacts', JSON.stringify(show));
-    location.reload();
+    deleteOne.addEventListener('click', (event)=> {
+      let idCon = show.indexOf(contact);
+      console.log(idCon)
+      show.splice(idCon, 1)
+      let idFav = showFav.indexOf(contact);
+      console.log(idFav);
+
+      if (idFav !== -1) {
+        showFav.splice(idFav,1);
+      };
+      localStorage.setItem(`contacts`, JSON.stringify(show));
+      localStorage.setItem(`favorites`, JSON.stringify(showFav))
+      location.reload();
     })
 
     favorite.addEventListener('click', ()=> {
+      if(contact.favorite===false){
       contact.favorite=true;
       let fav= JSON.parse(localStorage.getItem('favorites')) || [];
-      fav.push(show[indexNumber]);
+      let idCon = show.indexOf(contact);
+      fav.push(show[idCon]);
       localStorage.setItem('favorites', JSON.stringify(fav));
-      location.reload();
-    })
+      localStorage.setItem('contacts', JSON.stringify(show));
+      } else {
+        contact.favorite=false;
+        console.log('false');
+        let idFav = showFav.indexOf(contact);
+        showFav.splice(idFav,1);
+        console.log(idFav);
+        if (idFav !== -1) {
+          showFav.splice(idFav,1);
+        };
+          localStorage.setItem('favorites', JSON.stringify(showFav));
+          localStorage.setItem('contacts', JSON.stringify(show));
+        }
+        location.reload();
+      })
 
     select.addEventListener('click', ()=> {
       if(card.style.backgroundColor=== 'beige') {
         card.style.backgroundColor= 'purple';
         select.textContent= 'Unselect';
         contact.selected= true;
-        console.log(show[indexNumber].selected);
         localStorage.setItem('contacts', JSON.stringify(show));
       } else {
         card.style.backgroundColor= 'beige';
@@ -176,184 +121,118 @@ let arr= JSON.parse(localStorage.getItem('contacts')) || [];
         localStorage.setItem('contacts', JSON.stringify(show));
       }
     })
-  });
+}
 
-  let fav= JSON.parse(localStorage.getItem('favorites')) || [];
-  const favorites = localStorage.getItem('favorites');
-  let showFav = JSON.parse(favorites) || [];
+search.addEventListener('click', ()=> {
+  if(searchField.style.display=== 'none'){
+  searchField.style.display= 'block';
+} else {
+  searchField.style.display= 'none';
+}
+})
 
-  showFav.forEach((contact, indexNumber) => {
-    const card = document.createElement('div');
-    const nfield = document.createElement('p');
-    const pfield = document.createElement('p');
-    const efield = document.createElement('p');
-    const afield = document.createElement('p');
-    const deleteOne = document.createElement('button');
-    deleteOne.setAttribute('class', `delete${indexNumber}`)
-    deleteOne.textContent='Delete';
-    deleteOne.style.backgroundColor= 'red';
-    deleteOne.style.marginRight= '5px'
-    const favorite = document.createElement('button');
-    favorite.textContent='Delete from favorite';
-    favorite.style.color= 'red';
-    favorite.style.marginRight= '5px'
-    const select = document.createElement('button');
-    select.style.color= 'green';
-    select.textContent= 'Select';
-    card.style.backgroundColor= 'beige';
-    card.style.width= '300px';
-    card.style.padding= '10px';
-    card.style.margin= '20px';
+clearAll.addEventListener('click', ()=> {
+localStorage.clear()
+console.log('clicked')
+location.reload();
+})
 
-    card.appendChild(nfield);
-    card.appendChild(pfield);
-    card.appendChild(efield);
-    card.appendChild(afield);
-    card.appendChild(deleteOne);
-    card.appendChild(favorite);
-    card.appendChild(select);
+newContact.addEventListener('click', ()=> {
+  if (formDisplay.style.display=== 'none'){
+  formDisplay.style.display= 'flex';
+} else {
+  formDisplay.style.display= 'none';
+}
+})
 
-    nfield.textContent=`Name: ${contact.name}`;
-    pfield.textContent=`Phone nr: ${contact.phone}`;
-    efield.textContent=`Email address: ${contact.email}`;
-    afield.textContent=`Home address: ${contact.address}`;
-    favoriteList.appendChild(card);
+close.addEventListener('click', ()=> {
+  formDisplay.style.display= 'none';
+})
 
+searchField.addEventListener('keyup', (e) => {
+  const b = e.target.value.toLowerCase();
+const filteredCharacters = show.filter((character) => {
+  return (
+    character.name.toLowerCase().includes(b)
+  );
+})
+console.log(filteredCharacters)
+if (b){
+  ndexNumber=contact.id
+  filteredCharacters.forEach((contact) => {
+  contactList.innerHTML=null;
+  isorine(contact, contactList);
+  })
+  } else {
+    location.reload();
+  }
+})
+
+let arr= JSON.parse(localStorage.getItem('contacts')) || [];
+const contact = localStorage.getItem('contacts');
+let show =JSON.parse(contact) || [];
+
+show.forEach((contact) => {
+  isorine(contact, contactList)
+});
+
+let fav= JSON.parse(localStorage.getItem('favorites')) || [];
+const favorites = localStorage.getItem('favorites');
+let showFav = JSON.parse(favorites) || [];
+
+showFav.forEach((contact, indexNumber) => {
+  isorine(contact, favoriteList);
+});
+
+clearSelected.addEventListener('click', ()=> {
+  show.forEach((contact) => {
     if(contact.selected){
-      card.style.backgroundColor= 'purple';
-        select.textContent= 'Unselect';
+    let idCon = show.indexOf(contact);
+    console.log(idCon);
+    show.splice(idCon, 1);
     }
 
-    deleteOne.addEventListener('click', ()=> {
-    console.log('click');
-    show.splice(indexNumber,1);
-    localStorage.setItem('contacts', JSON.stringify(show));
-    showFav.splice(indexNumber,1);
-    localStorage.setItem('favorites', JSON.stringify(showFav));
+  })
+  showFav.forEach((contact, indexNumber) => {
+    if(contact.selected){
+      console.log(contact.selected);
+      let idFav = showFav.indexOf(contact);
+    if (idFav !== -1) {
+      showFav.splice(idFav,1);
+    };
+    } 
+  })
+  console.log(show);
+    localStorage.setItem(`contacts`, JSON.stringify(show));
+    localStorage.setItem(`favorites`, JSON.stringify(showFav))
     location.reload();
-    })
+  })
 
-    favorite.addEventListener('click', ()=> {
-      contact.favorite=false;
-      let fav= JSON.parse(localStorage.getItem('favorites')) || [];
-      fav.splice(indexNumber,1);
-      localStorage.setItem('favorites', JSON.stringify(fav));
-      location.reload();
-    })
-
-    select.addEventListener('click', ()=> {
-      if(card.style.backgroundColor=== 'beige') {
-        card.style.backgroundColor= 'purple';
-        select.textContent= 'Unselect';
-        contact.selected= true;
-        localStorage.setItem('favorites', JSON.stringify(showFav));
-      } else {
-        card.style.backgroundColor= 'beige';
-        select.textContent= 'Select';
-        contact.selected= false;
-        localStorage.setItem('favorites', JSON.stringify(showFav));
-      }
-    })
-  });
-
-  clearSelected.addEventListener('click', ()=> {
+  addRemove.addEventListener('click', ()=> {
     show.forEach((contact, indexNumber) => {
-      if(contact.selected){
-        console.log(contact.selected);
-        show.splice(indexNumber,1);
-      }
-    })
-    showFav.forEach((contact, indexNumber) => {
-      if(contact.selected){
-        console.log(contact.selected);
-        showFav.splice(indexNumber,1);
+      if(contact.selected) {
+        contact.favorite = true;
+        contact.selected = false;
+        localStorage.setItem('contacts', JSON.stringify(show));
+        fav.push(show[indexNumber]);
+        localStorage.setItem('favorites', JSON.stringify(fav));
+        location.reload();
       } 
     })
-    localStorage.setItem('favorites', JSON.stringify(showFav));
-    localStorage.setItem('contacts', JSON.stringify(show));
+    showFav.forEach((favorit, indexNumber) => {
+      if(favorit.selected) {
+        favorit.selected= false;
+        showFav.splice(indexNumber,1);
+        localStorage.setItem('favorites', JSON.stringify(showFav));
         location.reload();
+      }
     })
-
-    addRemove.addEventListener('click', ()=> {
-      show.forEach((contact, indexNumber) => {
-        if(contact.selected) {
-          contact.favorite = true;
-          contact.selected = false;
-          localStorage.setItem('contacts', JSON.stringify(show));
-          fav.push(show[indexNumber]);
-          localStorage.setItem('favorites', JSON.stringify(fav));
-          location.reload();
-        } 
-      })
-      showFav.forEach((favorit, indexNumber) => {
-        if(favorit.selected) {
-          favorit.selected= false;
-          showFav.splice(indexNumber,1);
-          localStorage.setItem('favorites', JSON.stringify(showFav));
-          location.reload();
-        }
-      })
-    })
-   
-
-// searchField.addEventListener('keyup', (e)=> {
-//   e.preventDefault()
-//   console.log(searchField.value)
-//   show.forEach((contact, indexNumber) => {
-//     if(contact.name===searchField.value){
-//       console.log('issove');
-//       let rastas = show.filter(contact => contact.name===searchField.value);
-//       console.log(rastas)
-//       const card = document.createElement('div');
-//     card.setAttribute('id', `found`)
-//     const nfield = document.createElement('p');
-//     const pfield = document.createElement('p');
-//     const efield = document.createElement('p');
-//     const afield = document.createElement('p');
-//     const deleteOne = document.createElement('button');
-//     deleteOne.textContent='Delete';
-//     deleteOne.style.backgroundColor= 'red';
-//     deleteOne.style.marginRight= '5px'
-//     card.style.backgroundColor= 'beige';
-//     card.style.width= '250px';
-//     card.style.padding= '10px';
-//     card.style.margin= '20px';
-
-//     card.appendChild(nfield);
-//     card.appendChild(pfield);
-//     card.appendChild(efield);
-//     card.appendChild(afield);
-//     card.appendChild(deleteOne);
-
-//     console.log(contact.name)
-
-//     nfield.textContent=`Name: ${contact.name}`;
-//     pfield.textContent=`Phone nr: ${contact.phone}`;
-//     efield.textContent=`Email address: ${contact.email}`;
-//     afield.textContent=`Home address: ${contact.address}`;
-
-//     let list = document.querySelector(`#listOfSearched`);
-//     list.appendChild(card);
-
-//     deleteOne.addEventListener('click', ()=> {
-//       console.log('click');
-//       show.splice(indexNumber,1);
-//       localStorage.setItem('contacts', JSON.stringify(show));
-//       showFav.splice(index,1);
-//       localStorage.setItem('favorites', JSON.stringify(showFav));
-//       location.reload();
-//       })
-
-//     } else {
-//       console.log('neissove');
-//     }
-//       })
-//       // searchField.value='';
-// })
-
+  })
 
 form.addEventListener('submit', (event)=> {
 event.preventDefault();
+let contactAll = JSON.parse(localStorage.getItem('contacts'))
+console.log(contactAll)
 if (fname.value && email.value && address.value){
   function obj(name, phone, email, address){
     this.name= name;
@@ -362,6 +241,7 @@ if (fname.value && email.value && address.value){
     this.address= address;
     this.favorite= false;
     this.selected= false;
+    this.id= contactAll ? contactAll.length+1:1;
   }
 
   let contacts = new obj(`${fname.value}`, `${phone.value}`, `${email.value}`, `${address.value}`);
@@ -375,4 +255,3 @@ if (fname.value && email.value && address.value){
   location.reload();
 }
 })
-
